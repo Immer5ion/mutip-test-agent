@@ -1,0 +1,4 @@
+interface:
+  display_name: "Playwright MCP Web Explorer"
+  short_description: "Explore web systems and design functional tests with MCP"
+  default_prompt: "使用 Playwright MCP 探索目标 Web 系统，梳理功能流程与状态风险，并输出优先级明确的功能测试设计结果。默认使用中文输出，除非用户明确要求其他语言。"

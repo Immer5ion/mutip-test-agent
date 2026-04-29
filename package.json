@@ -1,0 +1,23 @@
+{
+  "name": "playwright-multi-agent-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-agent Playwright automation framework with planning, codegen, self-healing and learning loop.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run -w @agent/contracts build && npm run -w @agent/executor build && npm run -w @agent/orchestrator build",
+    "dev": "npm run -w @agent/orchestrator dev",
+    "dev:orchestrator": "npm run -w @agent/orchestrator dev",
+    "dev:executor": "npm run -w @agent/executor dev",
+    "start": "npm run -w @agent/orchestrator start",
+    "start:executor": "npm run -w @agent/executor start",
+    "typecheck": "npm run -w @agent/contracts typecheck && npm run -w @agent/executor typecheck && npm run -w @agent/orchestrator typecheck",
+    "test": "npm run -ws test --if-present"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: multi-agent-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: agentdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - postgres_data:/var/lib/postgresql/data
+
+  executor:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    command: npm run -w @agent/executor start
+    environment:
+      PORT: 3001
+      LOG_LEVEL: info
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    command: npm run -w @agent/orchestrator start
+    environment:
+      PORT: 3000
+      EXECUTOR_BASE_URL: http://executor:3001
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/agentdb
+      DEFAULT_RETRY_BUDGET: 3
+      SELF_HEAL_ENABLED: "true"
+      FLOW_HEAL_ENABLED: "true"
+      LOG_LEVEL: info
+    ports:
+      - "3000:3000"
+    depends_on:
+      - executor
+      - postgres
+
+volumes:
+  postgres_data:
